@@ -1,0 +1,16 @@
+<mat-card class="text-center">
+    <mat-card-title>
+        ODABERITE ŽELJENU PREDAVAONICU
+    </mat-card-title>
+    <br>
+    <mat-card-subtitle>
+        ( broj u zagradi označava broj dostupnih mjesta u predavaonici ) 
+    </mat-card-subtitle>
+    <br>
+    <p class="buttons">
+        <button mat-raised-button color="accent" class="button" 
+        *ngFor="let room_capacity of rooms_capacities | keyvalue; index as roomLabel" [routerLink]="['room-calendar', room_capacity.key]">
+            <b>{{room_capacity.key}}</b> <br> ({{room_capacity.value}})
+        </button>
+    </p>
+</mat-card>

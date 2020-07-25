@@ -1,0 +1,59 @@
+<div *ngIf="showRooms; else elseBlock">
+    <mat-card class="text-center">
+        <mat-card-title>
+            ODABERITE JEDNU OD SLOBODNIH PREDAVAONICA
+        </mat-card-title>
+        <br>
+        <mat-card-subtitle>
+            ( broj u zagradi označava broj dostupnih mjesta u predavaonici ) 
+        </mat-card-subtitle>
+        <br>
+        <p class="buttons">
+            <button mat-raised-button color="accent" class="button" 
+            *ngFor="let room_capacity of rooms_capacities | keyvalue; index as roomLabel" [routerLink]="['room-calendar', room_capacity.key]">
+                <b>{{room_capacity.key}}</b> <br> ({{room_capacity.value}})
+            </button>
+        </p>
+    </mat-card>
+</div>
+<ng-template #elseBlock>
+    <br>
+    <div *ngIf="condition; else elseBlock">
+    <mat-card class="text-center">
+        <mat-card-title>
+            UPIŠI TRAŽENE PODATKE ZA<br>
+            PRETRAŽIVANJE SLOBODNE PREDAVAONICE
+        </mat-card-title>
+        <form [formGroup]="form" class="normal-form">
+            <input type="hidden" formControlName="$key">
+            <mat-form-field class="form-field">
+                <input matInput [matDatepicker]="picker1" placeholder="Datum početka" formControlName="startDate">
+                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+                <mat-error>Obavezno polje. Kliknite na ikonu kako biste odabrali datum.</mat-error>
+            </mat-form-field>
+            <mat-form-field class="form-field">
+                <input formControlName="startTime" matInput placeholder = "Vrijeme početka" >
+                <mat-error *ngIf="form.controls['startTime'].errors?.pattern">Vrijeme treba biti upisano u formatu 'HH:MM'.</mat-error>
+            </mat-form-field>
+            <mat-form-field class="form-field">
+                <input formControlName="endDate" matInput [matDatepicker]="picker2" placeholder="Datum završetka">
+                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
+                <mat-error>Obavezno polje. Kliknite na ikonu kako biste odabrali datum.</mat-error>
+            </mat-form-field>
+            <mat-form-field class="form-field">
+                <input formControlName="endTime" matInput placeholder = "Vrijeme završetka" >
+                <mat-error *ngIf="form.controls['endTime'].errors?.pattern">Vrijeme treba biti upisano u formatu 'HH:MM'.</mat-error>
+            </mat-form-field>
+            <div class="button-row">
+                <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid" (click)="onClick()">Potraži</button>
+                <button mat-raised-button color="warn" (click)="onClear()">Ispočetka</button>
+            </div>
+        </form>
+    </mat-card>
+    </div>
+    <ng-template #elseBlock>
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    </ng-template>
+</ng-template>

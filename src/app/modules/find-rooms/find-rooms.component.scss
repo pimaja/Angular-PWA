@@ -1,0 +1,36 @@
+.text-center {
+    display: flex;
+    text-align: center;
+    flex-direction: column;
+    > * {
+      width: 100%;
+    }
+    line-height: 1.5;
+}
+
+.normal-form{
+    max-width: 430px;
+    text-align: center;
+    margin: 0 auto;
+}
+
+.form-field{
+    padding: 10px;
+}
+
+.button-row button{
+    margin: 5px;
+}
+
+.buttons {
+    max-width: 450px;
+    margin: 0 auto;
+}
+
+.button {
+    margin-left: 5px ;
+    margin-bottom: 5px;
+    height:70px;
+    width:80px;
+    text-align: center;
+}

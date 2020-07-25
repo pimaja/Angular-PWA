@@ -1,0 +1,58 @@
+<div class='container'>
+    <mat-toolbar>
+        NOVA REZERVACIJA
+    </mat-toolbar>
+    <br>
+    <div *ngIf="condition; else elseBlock">
+    <form [formGroup]="form" class="normal-form">
+        <input type="hidden" formControlName="$key">
+        <mat-form-field class="form-field">
+            <input formControlName="title" matInput placeholder="Naziv događaja">
+        </mat-form-field>
+        <mat-form-field class="form-field">
+            <input formControlName="person" matInput placeholder="Osoba koja rezervira">
+            <mat-error>Obavezno polje.</mat-error>
+        </mat-form-field>
+        <br>
+        <mat-form-field class="form-field">
+            <input matInput [matDatepicker]="picker1" placeholder="Datum početka" formControlName="startDate">
+            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+            <mat-datepicker #picker1></mat-datepicker>
+            <mat-error>Obavezno polje. Kliknite na ikonu kako biste odabrali datum.</mat-error>
+        </mat-form-field>
+        <mat-form-field class="form-field">
+            <input formControlName="startTime" matInput placeholder = "Vrijeme početka" >
+            <mat-error *ngIf="form.controls['startTime'].errors?.pattern">Vrijeme treba biti upisano u formatu 'HH:MM'.</mat-error>
+        </mat-form-field>
+        <br>
+        <mat-form-field class="form-field">
+            <input formControlName="endDate" matInput [matDatepicker]="picker2" placeholder="Datum završetka">
+            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+            <mat-datepicker #picker2></mat-datepicker>
+            <mat-error>Obavezno polje. Kliknite na ikonu kako biste odabrali datum.</mat-error>
+        </mat-form-field>
+        <mat-form-field class="form-field">
+            <input formControlName="endTime" matInput placeholder = "Vrijeme završetka" >
+            <mat-error *ngIf="form.controls['endTime'].errors?.pattern">Vrijeme treba biti upisano u formatu 'HH:MM'.</mat-error>
+        </mat-form-field>
+        <div class="add-bottom-padding">
+            <span>Održava li se cijeli semestar u istom terminu?</span> <mat-radio-group formControlName="whole_semester">
+                <mat-radio-button value="1">Da</mat-radio-button>
+                <mat-radio-button value="2">Ne</mat-radio-button>
+            </mat-radio-group>
+        </div>
+        <div class="button-row">
+            <button type="button" mat-raised-button color="primary" [disabled]="form.invalid" (click)="onSave()">Spremi</button>
+            <button type="button" mat-raised-button color="warn" (click)="onClear()">Ispočetka</button>
+        </div>
+    </form>
+    </div>
+    <ng-template #elseBlock>
+        <div *ngIf="errorMessage; else elseBlock" class="normal-form">
+            {{ errorMessage }}
+        </div>
+        <ng-template #elseBlock>
+            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        </ng-template>
+    </ng-template>
+</div>

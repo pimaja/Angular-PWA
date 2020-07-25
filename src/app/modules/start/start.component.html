@@ -1,0 +1,18 @@
+<mat-card class="text-center">
+    <mat-card-title>
+        APLIKACIJA ZA REZERVACIJU PREDAVAONICA NA PMF - MATEMATIČKOM ODSJEKU
+    </mat-card-title>
+    <br>
+    <mat-card-subtitle class="text">
+        Odaberite način rezervacije
+    </mat-card-subtitle>
+    <br>
+    <mat-card-content>
+        <button class="text" mat-raised-button color="accent" [routerLink]="['all-rooms']">PREGLED PO SVIM PREDAVAONICAMA</button>
+    </mat-card-content>
+    <mat-card-content class="text">----- ILI -----<br></mat-card-content>
+    <mat-card-content>
+        <button class="text" mat-raised-button color="accent" [routerLink]="['find-rooms']">POTRAŽI SLOBODNU PREDAVAONICU <br> PO DATUMU I VREMENU</button>
+    </mat-card-content>
+</mat-card>
+

@@ -1,0 +1,23 @@
+.text-center {
+    display: flex;
+    text-align: center;
+    padding: 10px;
+    //font-size: 20px;
+    flex-direction: column;
+    > * {
+      width: 100%;
+    }
+}
+
+.buttons {
+    max-width: 450px;
+    margin: 0 auto;
+}
+
+.button {
+    margin-left: 5px ;
+    margin-bottom: 5px;
+    height:70px;
+    width:80px;
+    text-align: center;
+}

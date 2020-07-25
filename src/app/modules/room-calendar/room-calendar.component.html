@@ -1,0 +1,29 @@
+<mat-card class="text-center">
+    <mat-card-title>
+       Predavaonica <span class="room">{{this.room}}</span>
+    </mat-card-title>
+    <br>
+    <div *ngIf="loadCalendar; else elseBlock">
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    </div>
+    <ng-template #elseBlock>
+        <div class="calendar">
+            <full-calendar [options]="calendarOptions"></full-calendar>
+        </div>
+        <br>
+        <span class="i">Upute</span>
+        <br>
+        <div class="instructions">
+            Označite termine koje želite rezervirati tako da kliknete mišem na početno vrijeme te povučete miš do završnog vremena.
+            Tada će se otvoriti forma u kojoj ćete popuniti preostale podatke.
+            <br><br>
+            Žutom bojom su obojeni događaji koji su rasporedom predviđeni za cijeli semestar. Crvenom bojom su označeni naknadno dodani
+            događaji.
+            <br><br>
+            Nije dozvoljeno preklapanje rezervacija, osim u slučaju kada je poznato da je prethodno rezervirani događaj otkazan!
+            <br><br>
+            Rezervaciju termina možete promijeniti ili ukloniti tako da kliknete na postojeću rezervaciju te promijenite potrebne podatke, 
+            odnosno kliknete na ikonu za brisanje.
+        </div>
+    </ng-template>
+</mat-card>

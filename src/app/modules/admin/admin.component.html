@@ -1,0 +1,87 @@
+<div *ngIf="condition; else elseBlock">
+    <mat-card class="text-center">
+        <mat-card-title>
+        Autentifikacija
+        </mat-card-title>
+        <br>
+        <mat-card-subtitle class="error" *ngIf="errorMessage">
+        {{ errorMessage }}
+        </mat-card-subtitle>
+        <mat-card-content>
+        <div class="login-container" [formGroup]="loginForm">
+            <mat-form-field>
+            <input matInput placeholder="Unesite korisničko ime" formControlName="username">
+            </mat-form-field>
+            <br>
+            <mat-form-field>
+            <input matInput placeholder="Unesite zaporku" [type]="hide ? 'password' : 'text'" formControlName="password">
+            <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
+            </mat-form-field>
+        </div>
+        <br>
+        <button type="button" mat-raised-button color="primary" (click)="login()">Ulogiraj se</button>
+        </mat-card-content>
+    </mat-card>
+</div>
+
+<ng-template #elseBlock>
+    <mat-card class="text-center">
+        <mat-card-title>
+            Upišite podatke vezane za semester koji će sada biti u tijeku
+        </mat-card-title>
+        <br>
+        <div *ngIf="condition2; else elseBlock">
+            <mat-card-content>
+                <div class="data-container" [formGroup]="dataForm">
+                    <mat-form-field>
+                        <input matInput [matDatepicker]="picker1" placeholder="Datum početka semestra" formControlName="start">
+                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                        <mat-datepicker #picker1></mat-datepicker>
+                        <mat-error>Obavezno polje. Kliknite na ikonu kako biste odabrali datum.</mat-error>
+                    </mat-form-field> &nbsp;
+                    <mat-form-field>
+                        <input matInput [matDatepicker]="picker2" placeholder="Datum završetka semestra" formControlName="end">
+                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                        <mat-datepicker #picker2></mat-datepicker>
+                        <mat-error>Obavezno polje. Kliknite na ikonu kako biste odabrali datum.</mat-error>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <input matInput [matDatepicker]="picker3" placeholder="Datum početka 1. kolokvija" formControlName="startExams">
+                        <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+                        <mat-datepicker #picker3></mat-datepicker>
+                    </mat-form-field> &nbsp;
+                    <mat-form-field>
+                        <input matInput [matDatepicker]="picker4" placeholder="Datum završetka 1. kolokvija" formControlName="endExams">
+                        <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
+                        <mat-datepicker #picker4></mat-datepicker>
+                    </mat-form-field>
+                    <br>
+                    <input type="checkbox" (change)="toggleEditable($event)"> <span>Zimski semestar</span>
+                    <div *ngIf="contentEditable">
+                        <mat-form-field>
+                            <input matInput [matDatepicker]="picker5" placeholder="Datum početka praznika" formControlName="startHolidays">
+                            <mat-datepicker-toggle matSuffix [for]="picker5"></mat-datepicker-toggle>
+                            <mat-datepicker #picker5></mat-datepicker>
+                        </mat-form-field> &nbsp;
+                        <mat-form-field>
+                            <input matInput [matDatepicker]="picker6" placeholder="Datum završetka praznika" formControlName="endHolidays">
+                            <mat-datepicker-toggle matSuffix [for]="picker6"></mat-datepicker-toggle>
+                            <mat-datepicker #picker6></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <br>
+                <button type="button" mat-raised-button color="primary" (click)="save()">Spremi</button>  &nbsp;
+                <button type="button" mat-raised-button color="accent" (click)="cancel()">Odustani</button> <br><br><br>
+                <input type="file" #csvReader name="Upload CSV" id="txtFileUpload" (change)="uploadListener($event)" accept=".csv" />    
+                <button type="button" mat-raised-button color="primary" (click)="load()">Učitaj rezervacije iz csv datoteke</button> <br><br><br>
+                <button type="button" mat-raised-button color="warn" (click)="delete()">Obriši sve datume i rezervacije za ovaj semestar</button>
+            </mat-card-content>
+        </div>
+        <ng-template #elseBlock>
+            <mat-progress-bar mode="indeterminate"></mat-progress-bar> <br>
+            <div>Ako pregledavate raspored u određenoj predavaonici, osvježite stranicu kako biste vidjeli promjene.</div>
+        </ng-template>
+    </mat-card>
+</ng-template>
