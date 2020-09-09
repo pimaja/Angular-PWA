@@ -15,8 +15,8 @@ export class AppComponent {
   ){}
 
   ngOnInit(){
-    // run only on first running of Parse Server to create rooms 
-    //this.data.createRooms();
+    // run on load
+    this.data.createRooms();
   }
 
 }
