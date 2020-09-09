@@ -5,7 +5,7 @@
         </mat-card-title>
         <br>
         <mat-card-subtitle>
-            ( broj u zagradi označava broj dostupnih mjesta u predavaonici ) 
+            (broj u zagradi označava broj dostupnih mjesta u predavaonici) 
         </mat-card-subtitle>
         <br>
         <p class="buttons">
@@ -36,10 +36,11 @@
                 <input formControlName="startTime" matInput placeholder = "Vrijeme početka" >
                 <mat-error *ngIf="form.controls['startTime'].errors?.pattern">Vrijeme treba biti upisano u formatu 'HH:MM'.</mat-error>
             </mat-form-field>
+            <input type="hidden" formControlName="$key">
             <mat-form-field class="form-field">
                 <input formControlName="endDate" matInput [matDatepicker]="picker2" placeholder="Datum završetka">
                 <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-                <mat-datepicker #picker2></mat-datepicker>
+                <mat-datepicker #picker2 startView="month" [startAt]="startDate"></mat-datepicker>
                 <mat-error>Obavezno polje. Kliknite na ikonu kako biste odabrali datum.</mat-error>
             </mat-form-field>
             <mat-form-field class="form-field">

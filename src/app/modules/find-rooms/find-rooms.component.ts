@@ -13,6 +13,7 @@ export class FindRoomsComponent implements OnInit {
   showRooms = false;
   condition = true;
   rooms_capacities = new Map();
+  startDate = new Date();
 
   constructor(
     private dataService: DataService,
@@ -21,6 +22,9 @@ export class FindRoomsComponent implements OnInit {
 
   ngOnInit(): void {
     this._adapter.setLocale('hr');
+    this.form.valueChanges.subscribe(res=>{
+      this.startDate = new Date(this.form.value.startDate);
+    })
   }
 
   form: FormGroup = new FormGroup({
@@ -36,7 +40,7 @@ export class FindRoomsComponent implements OnInit {
       $key: null,
       startDate: '',
       startTime: '',
-      endDate: '',
+      endDate: this.startDate,
       endTime: ''
     });
   }
