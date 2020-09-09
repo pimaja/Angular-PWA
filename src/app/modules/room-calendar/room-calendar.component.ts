@@ -1,12 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild  } from '@angular/core';
 import { DataService } from "../core/data.service";
 
 import { ActivatedRoute } from '@angular/router';
-import { CalendarOptions } from '@fullcalendar/angular'; // useful for typechecking
+import { CalendarOptions, FullCalendarComponent } from '@fullcalendar/angular'; // useful for typechecking
 import { MatDialog } from '@angular/material/dialog';
 import { NewReservationComponent } from '../new-reservation/new-reservation.component';
 import { UpdateReservationComponent } from '../update-reservation/update-reservation.component';
-
 
 
 @Component({
@@ -19,8 +18,11 @@ export class RoomCalendarComponent implements OnInit {
   events;
   loadCalendar = true;
 
+  @ViewChild('calendar') calendarComponent: FullCalendarComponent;
+
   calendarOptions : CalendarOptions = {
     initialView: 'timeGridWeek',
+    initialDate: new Date(localStorage.getItem('lastDateChecked')),
     editable: true,
     selectable: true,
     eventClick: this.handleDateClick.bind(this), 
@@ -47,7 +49,8 @@ export class RoomCalendarComponent implements OnInit {
       end: 'today prev,next'
     },
     dayHeaderFormat: { weekday: 'short', month: 'numeric', day: 'numeric', year: 'numeric', omitCommas: true},
-    allDaySlot: false
+    allDaySlot: false,
+    
     //displayEventTime: false
   };
 
@@ -62,19 +65,29 @@ export class RoomCalendarComponent implements OnInit {
   handleDateSelect(arg) {
     this.dialog.open(NewReservationComponent, {
       data: { room: this.room, startStr: arg.startStr, endStr: arg.endStr }
-    }).afterClosed().subscribe(() => { this.loadEvents(); } );
+    }).afterClosed().subscribe(() => { 
+      this.loadEvents();  
+
+      localStorage.setItem('lastDateChecked', this.calendarComponent.getApi().getDate().toDateString());
+      this.calendarComponent.getApi().refetchEvents();
+    } );
   }
 
   handleDateClick(arg){
     this.dialog.open(UpdateReservationComponent, {
       data: { room: this.room, title:arg.event.title, start: arg.event.start, end: arg.event.end }
-    }).afterClosed().subscribe(() => { this.loadEvents(); } );
+    }).afterClosed().subscribe(() => { 
+      this.loadEvents(); 
+
+      localStorage.setItem('lastDateChecked', this.calendarComponent.getApi().getDate().toDateString());
+      this.calendarComponent.getApi().refetchEvents();
+    } );
   }
 
   constructor(
     private route: ActivatedRoute,
     private data: DataService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
   ) { }
 
   ngOnInit(): void {
@@ -83,7 +96,6 @@ export class RoomCalendarComponent implements OnInit {
     });
 
     this.loadEvents();
-
   }
 
 }

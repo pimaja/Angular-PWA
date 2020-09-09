@@ -7,9 +7,9 @@
         <mat-progress-bar mode="indeterminate"></mat-progress-bar>
     </div>
     <ng-template #elseBlock>
-        <div class="calendar">
-            <full-calendar [options]="calendarOptions"></full-calendar>
-        </div>
+        <span class="calendar">
+            <full-calendar #calendar deepChangeDetection="true" [options]="calendarOptions"></full-calendar>
+        </span>
         <br>
         <span class="i">Upute</span>
         <br>
