@@ -34,7 +34,7 @@
             <mat-error *ngIf="form.controls['endTime'].errors?.pattern">Vrijeme treba biti upisano u formatu 'HH:MM'.</mat-error>
         </mat-form-field>
         <div *ngIf="condition; else elseBlock">Ovo je rezervacija za cijeli semestar.</div>
-        <ng-template #elseBlock>Ovo nije rezervacija za cijeli semestar.</ng-template>
+        <ng-template #elseBlock>Ovo nije rezervacija za cijeli semestar.</ng-template> <br><br>
         <div class="button-row">
             <button type="button" mat-raised-button color="primary" [disabled]="form.invalid" (click)="onSave()">Spremi</button>
             <button type="button" mat-raised-button color="warn" (click)="onClear()">Ispočetka</button>
