@@ -36,7 +36,7 @@
             <mat-error *ngIf="form.controls['endTime'].errors?.pattern">Vrijeme treba biti upisano u formatu 'HH:MM'.</mat-error>
         </mat-form-field>
         <div class="add-bottom-padding">
-            <span>Održava li se cijeli semestar u istom terminu?</span> <mat-radio-group formControlName="whole_semester">
+            <span>Održava li se cijeli semestar u istom terminu?</span> <mat-radio-group formControlName="whole_semester"> <br>
                 <mat-radio-button value="1">Da</mat-radio-button>
                 <mat-radio-button value="2">Ne</mat-radio-button>
             </mat-radio-group>

@@ -24,6 +24,8 @@ export class NewReservationComponent implements OnInit {
   endTime = this.data.endStr.toString().split('T')[1].split('+')[0].split(':')[0] 
   + ":" + this.data.endStr.toString().split('T')[1].split('+')[0].split(':')[1];
   wholeSemester = "no";
+  newTime;
+  newMinutes;
 
 
   constructor(
@@ -44,6 +46,21 @@ export class NewReservationComponent implements OnInit {
     whole_semester: new FormControl("2")
   });
 
+  ngOnInit(): void {
+    this._adapter.setLocale('hr');
+    this.newMinutes = parseInt(this.startTime.split(':')[1]) + 30;
+    if(this.newMinutes == 60){
+      this.newTime = parseInt(this.startTime.split(':')[0]) + 1 + ":00";
+    }
+    else{
+      this.newTime = this.startTime.split(':')[0] + ":30"
+    }
+    if(this.newTime == this.endTime){
+      this.endTime = parseInt(this.startTime.split(':')[0])+2 + ":" + this.startTime.split(':')[1];
+    } 
+    this.form.controls['endTime'].setValue(this.endTime);
+  }
+
   initializeFormGroup() {
     this.form.setValue({
       $key: null,
@@ -55,10 +72,6 @@ export class NewReservationComponent implements OnInit {
       endTime: this.endTime,
       whole_semester: "2"
     });
-  }
-
-  ngOnInit(): void {
-    this._adapter.setLocale('hr');
   }
 
   onClear() {
