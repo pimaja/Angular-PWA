@@ -1,5 +1,7 @@
+<div  class="text-center">
+
 <div *ngIf="condition; else elseBlock">
-    <mat-card class="text-center">
+    <mat-card>
         <mat-card-title>
         Autentifikacija
         </mat-card-title>
@@ -25,36 +27,35 @@
 </div>
 
 <ng-template #elseBlock>
-    <mat-card class="text-center">
-        <mat-card-title>
-            Upišite podatke vezane za semester koji će sada biti u tijeku
-        </mat-card-title>
-        <br>
+    <mat-card>
         <div *ngIf="condition2; else elseBlock">
+            <mat-card-title>
+                Upišite podatke vezane uz novi semestar
+            </mat-card-title> <br>
             <mat-card-content>
                 <div class="data-container" [formGroup]="dataForm">
                     <mat-form-field>
-                        <input matInput [matDatepicker]="picker1" placeholder="Datum početka semestra" formControlName="start">
+                        <input matInput [matDatepicker]="picker1" placeholder="Datum početka semestra*" formControlName="start">
                         <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                         <mat-datepicker #picker1></mat-datepicker>
                         <mat-error>Obavezno polje. Kliknite na ikonu kako biste odabrali datum.</mat-error>
                     </mat-form-field> &nbsp;
                     <mat-form-field>
-                        <input matInput [matDatepicker]="picker2" placeholder="Datum završetka semestra" formControlName="end">
+                        <input matInput [matDatepicker]="picker2" placeholder="Datum završetka semestra*" formControlName="end">
                         <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-                        <mat-datepicker #picker2></mat-datepicker>
+                        <mat-datepicker #picker2 startView="month" [startAt]="startDateSemester"></mat-datepicker>
                         <mat-error>Obavezno polje. Kliknite na ikonu kako biste odabrali datum.</mat-error>
                     </mat-form-field>
                     <br>
                     <mat-form-field>
                         <input matInput [matDatepicker]="picker3" placeholder="Datum početka 1. kolokvija" formControlName="startExams">
                         <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
-                        <mat-datepicker #picker3></mat-datepicker>
+                        <mat-datepicker #picker3 startView="month" [startAt]="startDateSemester"></mat-datepicker>
                     </mat-form-field> &nbsp;
                     <mat-form-field>
                         <input matInput [matDatepicker]="picker4" placeholder="Datum završetka 1. kolokvija" formControlName="endExams">
                         <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
-                        <mat-datepicker #picker4></mat-datepicker>
+                        <mat-datepicker #picker4  startView="month" [startAt]="startDateExams"></mat-datepicker>
                     </mat-form-field>
                     <br>
                     <input type="checkbox" (change)="toggleEditable($event)"> <span>Zimski semestar</span>
@@ -62,26 +63,37 @@
                         <mat-form-field>
                             <input matInput [matDatepicker]="picker5" placeholder="Datum početka praznika" formControlName="startHolidays">
                             <mat-datepicker-toggle matSuffix [for]="picker5"></mat-datepicker-toggle>
-                            <mat-datepicker #picker5></mat-datepicker>
+                            <mat-datepicker #picker5 startView="month" [startAt]="startDateSemester"></mat-datepicker>
                         </mat-form-field> &nbsp;
                         <mat-form-field>
                             <input matInput [matDatepicker]="picker6" placeholder="Datum završetka praznika" formControlName="endHolidays">
                             <mat-datepicker-toggle matSuffix [for]="picker6"></mat-datepicker-toggle>
-                            <mat-datepicker #picker6></mat-datepicker>
+                            <mat-datepicker #picker6 startView="month" [startAt]="startDateHolidays"></mat-datepicker>
                         </mat-form-field>
                     </div>
                 </div>
                 <br>
+                <span>Učitaj rezervacije iz csv datoteke:</span> &nbsp;
+                <input type="file" #csvReader name="Upload CSV" id="txtFileUpload" (change)="uploadListener($event)" accept=".csv" />  <br><br>
                 <button type="button" mat-raised-button color="primary" (click)="save()">Spremi</button>  &nbsp;
-                <button type="button" mat-raised-button color="accent" (click)="cancel()">Odustani</button> <br><br><br>
-                <input type="file" #csvReader name="Upload CSV" id="txtFileUpload" (change)="uploadListener($event)" accept=".csv" />    
-                <button type="button" mat-raised-button color="primary" (click)="load()">Učitaj rezervacije iz csv datoteke</button> <br><br><br>
-                <button type="button" mat-raised-button color="warn" (click)="delete()">Obriši sve datume i rezervacije za ovaj semestar</button>
+                <button type="button" mat-raised-button color="accent" (click)="cancel()">Odustani</button> <br><br>
+                <mat-card-content class="text">----- ILI -----<br></mat-card-content>
+                <button type="button" mat-raised-button color="warn" (click)="delete()">Obriši sve datume i rezervacije <br> za ovaj semestar</button>
+                
             </mat-card-content>
         </div>
         <ng-template #elseBlock>
-            <mat-progress-bar mode="indeterminate"></mat-progress-bar> <br>
-            <div>Ako pregledavate raspored u određenoj predavaonici, osvježite stranicu kako biste vidjeli promjene.</div>
+            <div *ngIf="loading, else elseBlock2">
+                <mat-progress-bar mode="indeterminate"></mat-progress-bar> <br>
+                <div>Pričekajte da spremanje završi. Ukoliko trenutno pregledavate rezervacije <br>
+                     u nekoj predavaonici, osvježite stranicu kako biste vidjeli promjene.</div>
+            </div>
+            <ng-template #elseBlock2>
+                <mat-progress-bar mode="indeterminate"></mat-progress-bar> <br>
+                <div> Pričekajte da završi brisanje.</div>
+            </ng-template>
         </ng-template>
     </mat-card>
 </ng-template>
+
+</div>

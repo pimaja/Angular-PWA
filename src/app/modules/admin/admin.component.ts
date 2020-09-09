@@ -19,7 +19,14 @@ export class AdminComponent implements OnInit {
   errorMessage;
   condition = true;
   condition2 = true;
-  contentEditable = false;  
+  loading;
+  contentEditable = false; 
+  dates_completed = '';
+  reservations_completed = '';
+  
+  startDateSemester = new Date();
+  startDateExams = new Date();
+  startDateHolidays = new Date();
 
   loginForm: FormGroup = new FormGroup({
     $key: new FormControl(null),
@@ -48,6 +55,11 @@ export class AdminComponent implements OnInit {
 
   ngOnInit(): void {
     this._adapter.setLocale('hr');
+    this.dataForm.valueChanges.subscribe(res=>{
+      this.startDateSemester = new Date(this.dataForm.value.start);
+      this.startDateExams = new Date(this.dataForm.value.startExams);
+      this.startDateHolidays = new Date(this.dataForm.value.startHolidays);
+    })
   }
 
 
@@ -63,12 +75,16 @@ export class AdminComponent implements OnInit {
 
   save(){
     this.condition2 = false;
-    this.dataService.saveStartAndEndOfSemester(this.dataForm.value.start, this.dataForm.value.end, 
-      this.dataForm.value.startExams, this.dataForm.value.endExams, this.dataForm.value.startHolidays, this.dataForm.value.endHolidays)
-    .then(()=>{
-      // close after saving
-      this.dialogRef.close();
-    });
+    this.loading = true;
+    if(this.dataForm.value.start != '' && this.dataForm.value.end != '')
+      this.dataService.saveStartAndEndOfSemester(this.dataForm.value.start, this.dataForm.value.end, 
+        this.dataForm.value.startExams, this.dataForm.value.endExams, this.dataForm.value.startHolidays, this.dataForm.value.endHolidays)
+      .then(()=>{
+          this.load();
+      });
+    else{
+        this.load();
+    }
   }
 
 
@@ -111,7 +127,7 @@ export class AdminComponent implements OnInit {
       csvRecord.room = currentRecord[0];
       csvRecord.title = currentRecord[1];  
       csvRecord.person = currentRecord[2];  
-      csvRecord.date = currentRecord[3];  
+      csvRecord.dayOfWeek = currentRecord[3];  
       csvRecord.startTime = currentRecord[4];  
       csvRecord.endTime = currentRecord[5]; 
       csvArr.push(csvRecord); 
@@ -126,15 +142,13 @@ export class AdminComponent implements OnInit {
 
   // load data from records to Parse Server
   load(){
-    this.condition2 = false;
     this.dataService.LoadDataFromCsv(this.records).then(()=>{
-      // close after saving
       this.dialogRef.close();
     });
   }
 
   delete(){
-    this.condition2 = false;
+    this.loading = false;
     this.dataService.deleteEverythingOnAdminDemand().then(()=>{
       // close after saving
       this.dialogRef.close();
