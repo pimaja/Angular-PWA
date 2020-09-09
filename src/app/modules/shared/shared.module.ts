@@ -17,8 +17,6 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 
-
-
 import { StartComponent } from "../start/start.component";
 import { AllRoomsComponent } from '../all-rooms/all-rooms.component';
 import { FindRoomsComponent } from '../find-rooms/find-rooms.component';
@@ -27,7 +25,6 @@ import { NewReservationComponent } from '../new-reservation/new-reservation.comp
 import { UpdateReservationComponent } from '../update-reservation/update-reservation.component';
 import { MatConfirmDialogComponent } from '../mat-confirm-dialog/mat-confirm-dialog.component';
 import { AdminComponent } from '../admin/admin.component';
-
 
 import { FullCalendarModule} from '@fullcalendar/angular'; // the main connector. must go first
 import timeGridPlugin from '@fullcalendar/timegrid'; // a plugin
