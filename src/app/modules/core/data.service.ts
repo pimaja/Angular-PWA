@@ -8,7 +8,7 @@ import * as moment from 'moment';
 (Parse as any).serverURL = 'https://parseapi.back4app.com/'; // use your server url*/
 
 // localhost Parse Server
-Parse.initialize('g56bVxyRTCw5DNjFliaQTOUfq2lv02c3k5cOdIwa', 'i9MfvGECemyRJBCpXJQBGWlou3w0O1UcI1EVGZf1'); // use your appID & your js key
+Parse.initialize('8fFADrjqAbM6G2lBMX6skpSnowqwd4exysJdJ890', 'szKkUmTpakAilIeO7XdtESLlGT8867jSNHXjNhiD'); // use your appID & your master key
 (Parse as any).serverURL = 'http://localhost:1337/parse'; // use your server url
 
 
@@ -19,10 +19,15 @@ export class DataService {
 
   constructor(private http: HttpClient) { }
 
-  createRooms(){
-    console.log("creating rooms");
-
+  async createRooms(){
+    // first delete all that were previous there
     const Rooms = Parse.Object.extend('Rooms');
+    const query = new Parse.Query(Rooms);
+    const results = await query.find();
+    for (let i = 0; i < results.length; i++) {
+      results[i].destroy();
+    }
+
     let room = new Rooms();
     room.set("label", "001");
     room.set("capacity", "88");
@@ -347,8 +352,8 @@ export class DataService {
     const query = new Parse.Query(Events);
     query.equalTo("room", room);
     query.select("person", "title", "start", "end", "whole_semester");
-    // set limit to 10000, default is 100
-    query.limit(10000);
+    // set limit to 100000, default is 100
+    query.limit(100000);
     const results = await query.find();
 
     for (let i = 0; i < results.length; i++) {
@@ -579,11 +584,11 @@ export class DataService {
         if(starts.length === 0){
           var semesterStart = await this.getSemesterStart();
           if(semesterStart === undefined){
-            return 'Rezervacija za cijeli semester ne može biti napravljena ako je odabran datum koji nije u okvirima trajanja semestra! ' +
+            return 'Rezervacija za cijeli semestar ne može biti napravljena ako je odabran datum koji nije u okvirima trajanja semestra! ' +
             'Ljetni semestar traje od ožujka do lipnja, a zimski semestar od listopada do siječnja.';
           }
           else{
-            return 'Rezervacija za cijeli semester ne može biti napravljena ako je odabran datum koji nije u okvirima trajanja semestra! ' + 
+            return 'Rezervacija za cijeli semestar ne može biti napravljena ako je odabran datum koji nije u okvirima trajanja semestra! ' + 
             'Ovaj semester traje od ' + moment(semesterStart).format('DD. MM. YYYY.') + ' do ' + moment(await this.getSemesterEnd()).format('DD. MM. YYYY.');
           }
         }
@@ -615,12 +620,114 @@ export class DataService {
 
 
   async LoadDataFromCsv(records){
-    var date;
+    var date = new Date();
     var dates;
 
     for(let record of records){
-      date = record.date;
-      dates = await this.findAllDates(date);
+      // find first date in semester on given day of week
+      var startSemester;
+
+      const SemesterDates = Parse.Object.extend('SemesterDates');
+      const query = new Parse.Query(SemesterDates);
+      const object = await query.first();
+      if(object){
+        // there is only one row for dates, only one semester dates
+        startSemester = object.get('startSemester');
+      }
+
+      var start = new Date(startSemester);
+
+      if(start.getDay() == 1){
+        if(record.dayOfWeek == "PON"){
+          date = start;
+        } else if(record.dayOfWeek == "UTO"){
+          date.setDate(start.getDate() + 1);
+        } else if(record.dayOfWeek == "SRI"){
+          date.setDate(start.getDate() + 2);
+        } else if(record.dayOfWeek == "ČET"){
+          date.setDate(start.getDate() + 3);
+        } else if(record.dayOfWeek == "PET"){
+          date.setDate(start.getDate() + 4);
+        }
+      } else if(start.getDay() == 0){
+        if(record.dayOfWeek == "PON"){
+          date.setDate(start.getDate() + 1);
+        } else if(record.dayOfWeek == "UTO"){
+          date.setDate(start.getDate() + 2);
+        } else if(record.dayOfWeek == "SRI"){
+          date.setDate(start.getDate() + 3);
+        } else if(record.dayOfWeek == "ČET"){
+          date.setDate(start.getDate() + 4);
+        } else if(record.dayOfWeek == "PET"){
+          date.setDate(start.getDate() + 5);
+        }
+      } else if(start.getDay() == 2){
+        if(record.dayOfWeek == "PON"){
+          date.setDate(start.getDate() + 6);
+        } else if(record.dayOfWeek == "UTO"){
+          date = start;
+        } else if(record.dayOfWeek == "SRI"){
+          date.setDate(start.getDate() + 1);
+        } else if(record.dayOfWeek == "ČET"){
+          date.setDate(start.getDate() + 2);
+        } else if(record.dayOfWeek == "PET"){
+          date.setDate(start.getDate() + 3);
+        }
+      } else if(start.getDay() == 3){
+        if(record.dayOfWeek == "PON"){
+          date.setDate(start.getDate() + 5);
+        } else if(record.dayOfWeek == "UTO"){
+          date.setDate(start.getDate() + 6);
+        } else if(record.dayOfWeek == "SRI"){
+          date = start;
+        } else if(record.dayOfWeek == "ČET"){
+          date.setDate(start.getDate() + 1);
+        } else if(record.dayOfWeek == "PET"){
+          date.setDate(start.getDate() + 2);
+        }
+      } else if(start.getDay() == 4){
+        if(record.dayOfWeek == "PON"){
+          date.setDate(start.getDate() + 4);
+        } else if(record.dayOfWeek == "UTO"){
+          date.setDate(start.getDate() + 5);
+        } else if(record.dayOfWeek == "SRI"){
+          date.setDate(start.getDate() + 6);
+        } else if(record.dayOfWeek == "ČET"){
+          date = start;
+        } else if(record.dayOfWeek == "PET"){
+          date.setDate(start.getDate() + 1);
+        }
+      } else if(start.getDay() == 5){
+        if(record.dayOfWeek == "PON"){
+          date.setDate(start.getDate() + 3);
+        } else if(record.dayOfWeek == "UTO"){
+          date.setDate(start.getDate() + 4);
+        } else if(record.dayOfWeek == "SRI"){
+          date.setDate(start.getDate() + 5);
+        } else if(record.dayOfWeek == "ČET"){
+          date.setDate(start.getDate() + 6);
+        } else if(record.dayOfWeek == "PET"){
+          date = start;
+        }
+      } else if(start.getDay() == 6){
+        if(record.dayOfWeek == "PON"){
+          date.setDate(start.getDate() + 2);
+        } else if(record.dayOfWeek == "UTO"){
+          date.setDate(start.getDate() + 3);
+        } else if(record.dayOfWeek == "SRI"){
+          date.setDate(start.getDate() + 4);
+        } else if(record.dayOfWeek == "ČET"){
+          date.setDate(start.getDate() + 5);
+        } else if(record.dayOfWeek == "PET"){
+          date.setDate(start.getDate() + 5);
+        }
+      }
+
+      date.setMonth(start.getMonth());
+      date.setFullYear(start.getFullYear());
+
+      var dt = moment(date).format('YYYY-MM-DD');
+      dates = await this.findAllDates(dt);
       const Reservations = Parse.Object.extend('Reservations');
 
       for(var i = 0; i < dates.length; i++){
@@ -633,6 +740,7 @@ export class DataService {
         reservations.set("whole_semester", "yes");
         await reservations.save();
       }
+
     }
   }
 
@@ -708,6 +816,7 @@ export class DataService {
         // for every date delete a reservation
         var starts = await this.findAllDates(startDate);
         var ends = await this.findAllDates(endDate);
+        
         for(var i=0; i<starts.length; i++){
           const query = new Parse.Query(Reservations);
           query.equalTo("room", room);
@@ -793,9 +902,11 @@ export class DataService {
     const Reservations = Parse.Object.extend('Reservations');
     query = new Parse.Query(Reservations);
     query.equalTo("whole_semester", "yes");
+    // set limit to 100000, default is 100
+    query.limit(100000);
     var results = await query.find();
     for(var i = 0; i < results.length; i++){
-      // delete all of reservations - in case dates were first generated and after that it was decided by admin to change them
+      // delete all reservations - in case dates were first generated and after that it was decided by admin to change them
       // assume it is enough to keep reservations for only one semester and new semester dates will be defined
       //  only after previous semester ended
       results[i].destroy();
@@ -821,6 +932,8 @@ export class DataService {
     var object = await query.first();
     const Reservations = Parse.Object.extend('Reservations');
     query = new Parse.Query(Reservations);
+    // set limit to 100000, default is 100
+    query.limit(100000);
     var results = await query.find();
     if(object !== undefined){
       // if there are start and end of semester defined by admin
