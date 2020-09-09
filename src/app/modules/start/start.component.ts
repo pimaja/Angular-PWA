@@ -10,6 +10,8 @@ export class StartComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    //localStorage.removeItem('lastDateChecked');
+    localStorage.setItem('lastDateChecked', new Date().toDateString());
   }
 
 }
